@@ -4,7 +4,7 @@ class Battle {
       "player1": new Combatant({
         ...Pizzas.s001,
         team: "player",
-        hp: 50,
+        hp: 30,
         maxHp: 50,
         xp: 75,
         maxXp: 100,
@@ -30,7 +30,6 @@ class Battle {
         level: 1,
       }, this)
     }
-
     this.activeCombatants = {
       player: "player1",
       enemy: "enemy1",
@@ -41,11 +40,11 @@ class Battle {
     this.element = document.createElement("div");
     this.element.classList.add("Battle");
     this.element.innerHTML = (`
-    <div class = "Battle_hero">
+    <div class="Battle_hero">
       <img src="${'/images/characters/people/hero.png'}" alt="Hero" />
     </div>
-    <div class = "Battle_enemy">
-      <img src="${'/images/characters/people/npc3.png'}" alt="enemy" />
+    <div class="Battle_enemy">
+      <img src=${'/images/characters/people/npc3.png'} alt="Enemy" />
     </div>
     `)
   }
@@ -59,5 +58,19 @@ class Battle {
       combatant.id = key;
       combatant.init(this.element)
     })
+
+    this.turnCycle = new TurnCycle({
+      battle: this,
+      onNewEvent: event => {
+        return new Promise(resolve => {
+          const battleEvent = new BattleEvent(event, this)
+          battleEvent.init(resolve);
+        })
+      }
+    })
+    this.turnCycle.init();
+
+
   }
+
 }
